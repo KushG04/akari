@@ -1,7 +1,7 @@
 package com.comp301.a09akari.model;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class ModelImpl implements Model {
     private final PuzzleLibrary library;
