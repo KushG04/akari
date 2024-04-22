@@ -93,6 +93,10 @@ public class ModelImpl implements Model {
     @Override
     public boolean isLamp(int r, int c) {
         validatePosition(r, c);
+        if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
+            throw new IllegalArgumentException("can only query lamps in corridors");
+        }
+
         return lamps[r][c];
     }
 
