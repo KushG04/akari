@@ -1,5 +1,8 @@
 package com.comp301.a09akari;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SamplePuzzles {
   // The following mapping between cells and integers is used for the puzzles in this file
   //   0 <--> Clue cell with value "0"
@@ -71,4 +74,14 @@ public class SamplePuzzles {
     {6, 2, 6, 6, 6, 6},
     {6, 6, 6, 6, 0, 6},
   };
+
+  public static List<int[][]> getPuzzles() {
+    List<int[][]> puzzles = new ArrayList<>();
+    puzzles.add(PUZZLE_01);
+    puzzles.add(PUZZLE_02);
+    puzzles.add(PUZZLE_03);
+    puzzles.add(PUZZLE_04);
+    puzzles.add(PUZZLE_05);
+    return puzzles;
+  }
 }
