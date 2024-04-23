@@ -120,17 +120,9 @@ public class ModelImpl implements Model {
         if (getActivePuzzle().getCellType(r, c) == CellType.CLUE && !isClueSatisfied(r, c)) {
           return false;
         }
-      }
-    }
-    for (int r = 0; r < getActivePuzzle().getHeight(); r++) {
-      for (int c = 0; c < getActivePuzzle().getWidth(); c++) {
         if (getActivePuzzle().getCellType(r, c) == CellType.CORRIDOR && !isLit(r, c)) {
           return false;
         }
-      }
-    }
-    for (int r = 0; r < getActivePuzzle().getHeight(); r++) {
-      for (int c = 0; c < getActivePuzzle().getWidth(); c++) {
         if (lamps[r][c] && isLampIllegal(r, c)) {
           return false;
         }
@@ -192,24 +184,24 @@ public class ModelImpl implements Model {
     }
   }
 
-  private boolean checkVisibility(int r, int c, int rowStep, int columnStep) {
+  private boolean checkVisibility(int r, int c, int rowStep, int colStep) {
     int newRow = r + rowStep;
-    int newColumn = c + columnStep;
+    int newCol = c + colStep;
 
     while (newRow >= 0
         && newRow < getActivePuzzle().getHeight()
-        && newColumn >= 0
-        && newColumn < getActivePuzzle().getWidth()) {
-      CellType type = getActivePuzzle().getCellType(newRow, newColumn);
+        && newCol >= 0
+        && newCol < getActivePuzzle().getWidth()) {
+      CellType type = getActivePuzzle().getCellType(newRow, newCol);
       if (type == CellType.WALL) {
         break;
       }
-      if (lamps[newRow][newColumn]) {
+      if (lamps[newRow][newCol]) {
         return true;
       }
 
       newRow += rowStep;
-      newColumn += columnStep;
+      newCol += colStep;
     }
 
     return false;
