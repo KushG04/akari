@@ -116,6 +116,7 @@ public class ModelImpl implements Model {
     return lamps[r][c];
   }
 
+  /*
   @Override
   public boolean isLampIllegal(int r, int c) {
     validatePosition(r, c);
@@ -123,40 +124,57 @@ public class ModelImpl implements Model {
       return false;
     }
 
-    for (int i = r - 1; i >= 0; i--) {
-      if (getActivePuzzle().getCellType(i, c) == CellType.WALL) {
-        break;
-      }
-      if (lamps[i][c]) {
-        return true;
-      }
-    }
-    for (int i = r + 1; i < getActivePuzzle().getHeight(); i++) {
-      if (getActivePuzzle().getCellType(i, c) == CellType.WALL) {
-        break;
-      }
-      if (lamps[i][c]) {
-        return true;
-      }
-    }
-    for (int j = c - 1; j >= 0; j--) {
-      if (getActivePuzzle().getCellType(r, j) == CellType.WALL) {
-        break;
-      }
-      if (lamps[r][j]) {
-        return true;
-      }
-    }
-    for (int j = c + 1; j < getActivePuzzle().getWidth(); j++) {
-      if (getActivePuzzle().getCellType(r, j) == CellType.WALL) {
-        break;
-      }
-      if (lamps[r][j]) {
-        return true;
-      }
+    return checkDirectionLamp(r, c, -1, 0)
+        || checkDirectionLamp(r, c, 1, 0)
+        || checkDirectionLamp(r, c, 0, -1)
+        || checkDirectionLamp(r, c, 0, 1);
+  }
+  */
+
+  @Override
+  public boolean isLampIllegal(int r, int c) {
+    validatePosition(r, c);
+    if (!lamps[r][c]) {
+      throw new IllegalArgumentException("no lamp at this position");
     }
 
-    return false;
+    boolean isIllegal = false;
+    for (int i = 0; i < r; i++) {
+      if (getActivePuzzle().getCellType(i, c) == CellType.CORRIDOR && lamps[i][c]) {
+        isIllegal = true;
+      }
+      if (getActivePuzzle().getCellType(i, c) == CellType.WALL || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
+        return false;
+      }
+    }
+    if (isIllegal) { return true; }
+    for (int i = getActivePuzzle().getHeight() - 1; i > r; i--) {
+      if (getActivePuzzle().getCellType(i, c) == CellType.CORRIDOR && lamps[i][c]) {
+        isIllegal = true;
+      }
+      if (getActivePuzzle().getCellType(i, c) == CellType.WALL || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
+        return false;
+      }
+    }
+    if (isIllegal) { return true; }
+    for (int j = 0; j < c; j++) {
+      if (getActivePuzzle().getCellType(r, j) == CellType.CORRIDOR && lamps[r][j]) {
+        isIllegal = true;
+      }
+      if (getActivePuzzle().getCellType(r, j) == CellType.WALL || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
+        return false;
+      }
+    }
+    if (isIllegal) { return true; }
+    for (int j = getActivePuzzle().getWidth() - 1; j > c; j--) {
+      if (getActivePuzzle().getCellType(r, j) == CellType.CORRIDOR && lamps[r][j]) {
+        isIllegal = true;
+      }
+      if (getActivePuzzle().getCellType(r, j) == CellType.WALL || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
+        return false;
+      }
+    }
+    return isIllegal;
   }
 
   @Override

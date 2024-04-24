@@ -9,6 +9,10 @@ public class ControlView implements FXComponent {
   private final ClassicMvcController controller;
 
   public ControlView(ClassicMvcController controller) {
+    if (controller == null) {
+      throw new IllegalArgumentException("controller cannot be null");
+    }
+
     this.controller = controller;
   }
 

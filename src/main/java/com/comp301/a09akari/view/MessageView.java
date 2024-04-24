@@ -11,9 +11,12 @@ public class MessageView implements FXComponent, ModelObserver {
   private final Label messageLabel;
 
   public MessageView(Model model) {
+    if (model == null) {
+      throw new IllegalArgumentException("model cannot be null");
+    }
+
     this.model = model;
-    this.messageLabel = new Label("Solve the puzzle.");
-    this.messageLabel.setStyle("-fx-background-color: grey; -fx-text-fill: black;");
+    this.messageLabel = new Label("Solve the puzzle!");
     this.model.addObserver(this);
   }
 
@@ -21,7 +24,6 @@ public class MessageView implements FXComponent, ModelObserver {
   public Parent render() {
     VBox messageBox = new VBox();
     messageBox.getChildren().add(messageLabel);
-    update(model);
     return messageBox;
   }
 
@@ -31,7 +33,7 @@ public class MessageView implements FXComponent, ModelObserver {
       messageLabel.setText("Puzzle Solved!");
       messageLabel.setStyle("-fx-background-color: green; -fx-text-fill: white;");
     } else {
-      messageLabel.setText("Solve the puzzle.");
+      messageLabel.setText("Solve the puzzle!");
       messageLabel.setStyle("-fx-background-color: grey; -fx-text-fill: black;");
     }
   }
