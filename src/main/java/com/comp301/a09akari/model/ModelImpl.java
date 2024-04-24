@@ -48,7 +48,6 @@ public class ModelImpl implements Model {
     }
   }
 
-  /*
   @Override
   public boolean isLit(int r, int c) {
     validatePosition(r, c);
@@ -61,8 +60,8 @@ public class ModelImpl implements Model {
         || checkDirectionLight(r, c, 0, -1)
         || checkDirectionLight(r, c, 0, 1);
   }
-  */
 
+  /*
   @Override
   public boolean isLit(int r, int c) {
     validatePosition(r, c);
@@ -105,6 +104,7 @@ public class ModelImpl implements Model {
 
     return false;
   }
+  */
 
   @Override
   public boolean isLamp(int r, int c) {
@@ -131,6 +131,7 @@ public class ModelImpl implements Model {
   }
   */
 
+  /*
   @Override
   public boolean isLampIllegal(int r, int c) {
     validatePosition(r, c);
@@ -138,43 +139,68 @@ public class ModelImpl implements Model {
       throw new IllegalArgumentException("no lamp at this position");
     }
 
-    boolean isIllegal = false;
     for (int i = 0; i < r; i++) {
       if (getActivePuzzle().getCellType(i, c) == CellType.CORRIDOR && lamps[i][c]) {
-        isIllegal = true;
+        return true;
       }
-      if (getActivePuzzle().getCellType(i, c) == CellType.WALL || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
-        return false;
+      if (getActivePuzzle().getCellType(i, c) == CellType.WALL
+          || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
+        break;
       }
     }
-    if (isIllegal) { return true; }
-    for (int i = getActivePuzzle().getHeight() - 1; i > r; i--) {
+    for (int i = r + 1; i < getActivePuzzle().getHeight(); i++) {
       if (getActivePuzzle().getCellType(i, c) == CellType.CORRIDOR && lamps[i][c]) {
-        isIllegal = true;
+        return true;
       }
-      if (getActivePuzzle().getCellType(i, c) == CellType.WALL || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
-        return false;
+      if (getActivePuzzle().getCellType(i, c) == CellType.WALL
+          || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
+        break;
       }
     }
-    if (isIllegal) { return true; }
     for (int j = 0; j < c; j++) {
       if (getActivePuzzle().getCellType(r, j) == CellType.CORRIDOR && lamps[r][j]) {
-        isIllegal = true;
+        return true;
       }
-      if (getActivePuzzle().getCellType(r, j) == CellType.WALL || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
-        return false;
+      if (getActivePuzzle().getCellType(r, j) == CellType.WALL
+          || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
+        break;
       }
     }
-    if (isIllegal) { return true; }
-    for (int j = getActivePuzzle().getWidth() - 1; j > c; j--) {
+    for (int j = c + 1; j < getActivePuzzle().getWidth(); j++) {
       if (getActivePuzzle().getCellType(r, j) == CellType.CORRIDOR && lamps[r][j]) {
-        isIllegal = true;
+        return true;
       }
-      if (getActivePuzzle().getCellType(r, j) == CellType.WALL || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
-        return false;
+      if (getActivePuzzle().getCellType(r, j) == CellType.WALL
+          || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
+        break;
       }
     }
-    return isIllegal;
+
+    return false;
+  }
+  */
+
+  @Override
+  public boolean isLampIllegal(int r, int c) {
+    validatePosition(r, c);
+    if (!lamps[r][c]) {
+      throw new IllegalArgumentException("no lamp at this position");
+    }
+
+    if (r > 0 && getActivePuzzle().getCellType(r - 1, c) == CellType.CORRIDOR && lamps[r - 1][c]) {
+      return true;
+    }
+    if (r < getActivePuzzle().getHeight() - 1
+        && getActivePuzzle().getCellType(r + 1, c) == CellType.CORRIDOR
+        && lamps[r + 1][c]) {
+      return true;
+    }
+    if (c > 0 && getActivePuzzle().getCellType(r, c - 1) == CellType.CORRIDOR && lamps[r][c - 1]) {
+      return true;
+    }
+    return c < getActivePuzzle().getWidth() - 1
+        && getActivePuzzle().getCellType(r, c + 1) == CellType.CORRIDOR
+        && lamps[r][c + 1];
   }
 
   @Override
@@ -320,9 +346,9 @@ public class ModelImpl implements Model {
         && newCol < getActivePuzzle().getWidth()) {
       CellType type = getActivePuzzle().getCellType(newRow, newCol);
       if (type == CellType.WALL) {
-        break;
+        return false;
       }
-      if (lamps[newRow][newCol]) {
+      if (!lamps[newRow][newCol]) {
         return true;
       }
 
@@ -333,6 +359,7 @@ public class ModelImpl implements Model {
     return false;
   }
 
+  /*
   private boolean checkDirectionLamp(int r, int c, int rowStep, int colStep) {
     int newRow = r + rowStep;
     int newCol = c + colStep;
@@ -357,4 +384,5 @@ public class ModelImpl implements Model {
 
     return false;
   }
+  */
 }
