@@ -51,11 +51,14 @@ public class ModelImpl implements Model {
   @Override
   public boolean isLit(int r, int c) {
     validatePosition(r, c);
+    if (getActivePuzzle().getCellType(r, c) == CellType.WALL) {
+      return false;
+    }
 
-    return checkVisibility(r, c, 0, 1)
-        || checkVisibility(r, c, 0, -1)
-        || checkVisibility(r, c, 1, 0)
-        || checkVisibility(r, c, -1, 0);
+    return checkDirectionLight(r, c, -1, 0)
+        || checkDirectionLight(r, c, 1, 0)
+        || checkDirectionLight(r, c, 0, -1)
+        || checkDirectionLight(r, c, 0, 1);
   }
 
   @Override
@@ -72,13 +75,13 @@ public class ModelImpl implements Model {
   public boolean isLampIllegal(int r, int c) {
     validatePosition(r, c);
     if (!lamps[r][c]) {
-      throw new IllegalArgumentException("no lamp at the specified location");
+      return false;
     }
 
-    return checkVisibility(r, c, 0, 1)
-        || checkVisibility(r, c, 0, -1)
-        || checkVisibility(r, c, 1, 0)
-        || checkVisibility(r, c, -1, 0);
+    return checkDirectionLamp(r, c, -1, 0)
+        || checkDirectionLamp(r, c, 1, 0)
+        || checkDirectionLamp(r, c, 0, -1)
+        || checkDirectionLamp(r, c, 0, 1);
   }
 
   @Override
@@ -185,7 +188,7 @@ public class ModelImpl implements Model {
     }
   }
 
-  private boolean checkVisibility(int r, int c, int rowStep, int colStep) {
+  private boolean checkDirectionLight(int r, int c, int rowStep, int colStep) {
     int newRow = r + rowStep;
     int newCol = c + colStep;
 
@@ -195,9 +198,34 @@ public class ModelImpl implements Model {
         && newCol < getActivePuzzle().getWidth()) {
       CellType type = getActivePuzzle().getCellType(newRow, newCol);
       if (type == CellType.WALL) {
-        return false;
+        break;
       }
       if (lamps[newRow][newCol]) {
+        return true;
+      }
+
+      newRow += rowStep;
+      newCol += colStep;
+    }
+
+    return false;
+  }
+
+  private boolean checkDirectionLamp(int r, int c, int rowStep, int colStep) {
+    int newRow = r + rowStep;
+    int newCol = c + colStep;
+    boolean pastWall = false;
+
+    while (newRow >= 0
+        && newRow < getActivePuzzle().getHeight()
+        && newCol >= 0
+        && newCol < getActivePuzzle().getWidth()
+        && !pastWall) {
+      CellType type = getActivePuzzle().getCellType(newRow, newCol);
+      if (type == CellType.WALL) {
+        pastWall = true;
+      }
+      if (lamps[newRow][newCol] && !pastWall) {
         return true;
       }
 
