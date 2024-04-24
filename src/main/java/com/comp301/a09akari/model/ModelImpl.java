@@ -184,6 +184,7 @@ public class ModelImpl implements Model {
     }
   }
 
+  /*
   private boolean checkVisibility(int r, int c, int rowStep, int colStep) {
     int newRow = r + rowStep;
     int newCol = c + colStep;
@@ -203,6 +204,29 @@ public class ModelImpl implements Model {
       newRow += rowStep;
       newCol += colStep;
     }
+
+    return false;
+  }
+  */
+
+  private boolean checkVisibility(int r, int c, int rowStep, int colStep) {
+    int newRow = r;
+    int newCol = c;
+
+    do {
+      if (getActivePuzzle().getCellType(newRow, newCol) == CellType.WALL) {
+        break;
+      }
+      if (lamps[newRow][newCol]) {
+        return true;
+      }
+
+      newRow += rowStep;
+      newCol += colStep;
+    } while (newRow >= 0
+            && newRow < getActivePuzzle().getHeight()
+            && newCol >= 0
+            && newCol < getActivePuzzle().getWidth());
 
     return false;
   }
