@@ -65,11 +65,14 @@ public class ModelImpl implements Model {
 
   @Override
   public boolean isLit(int r, int c) {
-    validatePosition(r, c);
+    if (r < 0 || r >= getActivePuzzle().getHeight() || c < 0 || c >= getActivePuzzle().getWidth()) {
+      throw new IndexOutOfBoundsException("row or column is out of bounds");
+    }
     if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
       throw new IllegalArgumentException("invalid cell for a lamp");
     }
 
+    validatePosition(r, c);
     if (lamps[r][c]) {
       return true;
     }
@@ -288,6 +291,7 @@ public class ModelImpl implements Model {
     }
   }
 
+  /*
   private boolean checkDirectionLight(int r, int c, int rowStep, int colStep) {
     int newRow = r + rowStep;
     int newCol = c + colStep;
@@ -301,32 +305,6 @@ public class ModelImpl implements Model {
         return false;
       }
       if (!isLamp(newRow, newCol)) {
-        return true;
-      }
-
-      newRow += rowStep;
-      newCol += colStep;
-    }
-
-    return false;
-  }
-
-  /*
-  private boolean checkDirectionLamp(int r, int c, int rowStep, int colStep) {
-    int newRow = r + rowStep;
-    int newCol = c + colStep;
-    boolean pastWall = false;
-
-    while (newRow >= 0
-        && newRow < getActivePuzzle().getHeight()
-        && newCol >= 0
-        && newCol < getActivePuzzle().getWidth()
-        && !pastWall) {
-      CellType type = getActivePuzzle().getCellType(newRow, newCol);
-      if (type == CellType.WALL) {
-        pastWall = true;
-      }
-      if (lamps[newRow][newCol] && !pastWall) {
         return true;
       }
 
