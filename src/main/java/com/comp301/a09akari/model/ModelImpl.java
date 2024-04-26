@@ -63,16 +63,14 @@ public class ModelImpl implements Model {
   }
   */
 
+  /*
   @Override
   public boolean isLit(int r, int c) {
-    if (r < 0 || r >= getActivePuzzle().getHeight() || c < 0 || c >= getActivePuzzle().getWidth()) {
-      throw new IndexOutOfBoundsException("row or column is out of bounds");
-    }
+    validatePosition(r, c);
     if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
       throw new IllegalArgumentException("invalid cell for a lamp");
     }
 
-    validatePosition(r, c);
     if (lamps[r][c]) {
       return true;
     }
@@ -97,6 +95,54 @@ public class ModelImpl implements Model {
     for (int j = c;
         j < getActivePuzzle().getWidth() && getActivePuzzle().getCellType(r, j) != CellType.WALL;
         j++) {
+      if (lamps[r][j]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+  */
+
+  @Override
+  public boolean isLit(int r, int c) {
+    validatePosition(r, c);
+    if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
+      throw new IllegalArgumentException("invalid cell for a lamp");
+    }
+
+    if (lamps[r][c]) {
+      return true;
+    }
+
+    for (int i = r - 1; i >= 0; i--) {
+      if (getActivePuzzle().getCellType(i, c) == CellType.WALL || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
+        break;
+      }
+      if (lamps[i][c]) {
+        return true;
+      }
+    }
+    for (int i = r + 1; i < getActivePuzzle().getHeight(); i++) {
+      if (getActivePuzzle().getCellType(i, c) == CellType.WALL || getActivePuzzle().getCellType(i, c) == CellType.CLUE) {
+        break;
+      }
+      if (lamps[i][c]) {
+        return true;
+      }
+    }
+    for (int j = c - 1; j >= 0; j--) {
+      if (getActivePuzzle().getCellType(r, j) == CellType.WALL || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
+        break;
+      }
+      if (lamps[r][j]) {
+        return true;
+      }
+    }
+    for (int j = c + 1; j < getActivePuzzle().getWidth(); j++) {
+      if (getActivePuzzle().getCellType(r, j) == CellType.WALL || getActivePuzzle().getCellType(r, j) == CellType.CLUE) {
+        break;
+      }
       if (lamps[r][j]) {
         return true;
       }
