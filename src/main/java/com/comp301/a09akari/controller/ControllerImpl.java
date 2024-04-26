@@ -40,6 +40,7 @@ public class ControllerImpl implements ClassicMvcController {
 
   @Override
   public void clickResetPuzzle() {
+    System.out.println("puzzle was reset");
     model.resetPuzzle();
   }
 

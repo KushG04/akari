@@ -5,3 +5,50 @@
  * JavaFX start() method:
  *   scene.getStylesheets().add("main.css");
  */
+
+.cell {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+}
+
+.corridor-cell {
+    -fx-background-color: #CCCCCC;
+}
+
+.clear-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.illegal-lamp {
+    -fx-background-color: #FF6347;
+}
+
+.lit-cell {
+    -fx-background-color: yellow;
+}
+
+.wall-cell {
+    -fx-fill: black;
+    -fx-background-color: black;
+}
+
+.satisfied-clue {
+    -fx-background-color: green;
+}
+
+.game-title-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.puzzle-number {
+    -fx-font-size: 18px;
+    -fx-text-alignment: right;
+    -fx-padding: 10px;
+}

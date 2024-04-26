@@ -25,9 +25,7 @@ public class ModelImpl implements Model {
   @Override
   public void addLamp(int r, int c) {
     validatePosition(r, c);
-    if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
-      throw new IllegalArgumentException("lamps can only be placed in corridors");
-    }
+    ensureCorridor(r, c);
 
     if (!lamps[r][c]) {
       lamps[r][c] = true;
@@ -38,9 +36,7 @@ public class ModelImpl implements Model {
   @Override
   public void removeLamp(int r, int c) {
     validatePosition(r, c);
-    if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
-      throw new IllegalArgumentException("lamps can only be removed from corridors");
-    }
+    ensureCorridor(r, c);
 
     if (lamps[r][c]) {
       lamps[r][c] = false;
@@ -51,9 +47,7 @@ public class ModelImpl implements Model {
   @Override
   public boolean isLit(int r, int c) {
     validatePosition(r, c);
-    if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
-      throw new IllegalArgumentException("invalid cell for a lamp");
-    }
+    ensureCorridor(r, c);
 
     if (lamps[r][c]) {
       return true;
@@ -187,25 +181,6 @@ public class ModelImpl implements Model {
     notifyObservers();
   }
 
-  /*
-  @Override
-  public boolean isSolved() {
-    for (int r = 0; r < getActivePuzzle().getHeight(); r++) {
-      for (int c = 0; c < getActivePuzzle().getWidth(); c++) {
-        CellType type = getActivePuzzle().getCellType(r, c);
-        if (type == CellType.CORRIDOR && !isLit(r, c)) {
-          return false;
-        }
-        if (type == CellType.CLUE && !isClueSatisfied(r, c)) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-  */
-
   @Override
   public boolean isSolved() {
     for (int r = 0; r < getActivePuzzle().getHeight(); r++) {
@@ -225,35 +200,6 @@ public class ModelImpl implements Model {
 
     return true;
   }
-
-  /*
-  @Override
-  public boolean isSolved() {
-    for (int r = 0; r < getActivePuzzle().getHeight(); r++) {
-      for (int c = 0; c < getActivePuzzle().getWidth(); c++) {
-        switch (getActivePuzzle().getCellType(r, c)) {
-          case WALL:
-            break;
-          case CORRIDOR:
-            if (this.isLamp(r, c) && this.isLampIllegal(r, c)) {
-              return false;
-            }
-            if (!this.isLit(r, c)) {
-              return false;
-            }
-            break;
-          case CLUE:
-            if (!this.isClueSatisfied(r, c)) {
-              return false;
-            }
-            break;
-        }
-      }
-    }
-
-    return true;
-  }
-  */
 
   @Override
   public boolean isClueSatisfied(int r, int c) {
@@ -304,6 +250,12 @@ public class ModelImpl implements Model {
   private void validatePosition(int r, int c) {
     if (r < 0 || r >= getActivePuzzle().getHeight() || c < 0 || c >= getActivePuzzle().getWidth()) {
       throw new IndexOutOfBoundsException("row or column is out of bounds");
+    }
+  }
+
+  private void ensureCorridor(int r, int c) {
+    if (getActivePuzzle().getCellType(r, c) != CellType.CORRIDOR) {
+      throw new IllegalArgumentException("only a corridor can have a lamp");
     }
   }
 }

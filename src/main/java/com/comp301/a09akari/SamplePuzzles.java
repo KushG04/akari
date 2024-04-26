@@ -74,14 +74,4 @@ public class SamplePuzzles {
     {6, 2, 6, 6, 6, 6},
     {6, 6, 6, 6, 0, 6},
   };
-
-  public static List<int[][]> getPuzzles() {
-    List<int[][]> puzzles = new ArrayList<>();
-    puzzles.add(PUZZLE_01);
-    puzzles.add(PUZZLE_02);
-    puzzles.add(PUZZLE_03);
-    puzzles.add(PUZZLE_04);
-    puzzles.add(PUZZLE_05);
-    return puzzles;
-  }
 }

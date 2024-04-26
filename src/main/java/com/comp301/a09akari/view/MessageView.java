@@ -1,40 +1,42 @@
 package com.comp301.a09akari.view;
 
+import com.comp301.a09akari.controller.ClassicMvcController;
 import com.comp301.a09akari.model.Model;
 import com.comp301.a09akari.model.ModelObserver;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 public class MessageView implements FXComponent, ModelObserver {
   private final Model model;
-  private final Label messageLabel;
+  private final ClassicMvcController controller;
 
-  public MessageView(Model model) {
-    if (model == null) {
-      throw new IllegalArgumentException("model cannot be null");
+  public MessageView(Model model, ClassicMvcController controller) {
+    if (model == null || controller == null) {
+      throw new IllegalArgumentException("model and controller cannot be null");
     }
 
     this.model = model;
-    this.messageLabel = new Label("Solve the puzzle!");
-    this.model.addObserver(this);
+    this.controller = controller;
   }
 
   @Override
   public Parent render() {
-    VBox messageBox = new VBox();
-    messageBox.getChildren().add(messageLabel);
-    return messageBox;
+    HBox messageContainer = new HBox(5);
+    messageContainer.setAlignment(Pos.CENTER);
+    Label messageLabel = new Label();
+
+    if (model.isSolved()) {
+      messageLabel.setText("Puzzle Solved!");
+    } else {
+      messageLabel.setText("Solve the puzzle!");
+    }
+
+    messageContainer.getChildren().add(messageLabel);
+    return messageContainer;
   }
 
   @Override
-  public void update(Model model) {
-    if (model.isSolved()) {
-      messageLabel.setText("Puzzle Solved!");
-      messageLabel.setStyle("-fx-background-color: green; -fx-text-fill: white;");
-    } else {
-      messageLabel.setText("Solve the puzzle!");
-      messageLabel.setStyle("-fx-background-color: grey; -fx-text-fill: black;");
-    }
-  }
+  public void update(Model model) {}
 }
